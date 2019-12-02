@@ -1,0 +1,51 @@
+MODEL:
+  PRETRAIN_CHOICE: 'imagenet'  ## imagenet
+  NAME: 'se_resnet101_ibn_a' ## se_resnext50 , se_resnet50 , resnet50 ,resnet34, mobilenetv3,resnet50_ibn_a,resnet50_ibn_a_old
+  PRETRAIN_PATH: 'modeling/se_resnet101_ibn_a.pth.tar'
+  METRIC_LOSS_TYPE: 'triplet_loss'
+  IF_LABELSMOOTH: 'on'
+
+INPUT:
+  SIZE_TRAIN: [256, 128]
+  SIZE_TEST: [256, 128]
+  PROB: 0.5 # random horizontal flip
+  RE_PROB: 0.5 # random erasing
+  PADDING: 10
+
+DATASETS:
+  NAMES: ('market1501') ### dukemtmc , market1501
+
+DATALOADER:
+  SAMPLER: 'softmax_triplet'
+  NUM_INSTANCE: 4
+  NUM_WORKERS: 4
+
+SOLVER:
+  OPTIMIZER_NAME: 'Adam'
+  MAX_EPOCHS: 160
+  BASE_LR: 0.00035
+
+  BIAS_LR_FACTOR: 1
+  WEIGHT_DECAY: 0.0005
+  WEIGHT_DECAY_BIAS: 0.0005
+  IMS_PER_BATCH: 64
+
+  STEPS: [40, 70, 90, 110]
+  GAMMA: 0.1
+
+  WARMUP_FACTOR: 0.01
+  WARMUP_ITERS: 15
+  WARMUP_METHOD: 'linear'
+
+  CHECKPOINT_PERIOD: 5
+  LOG_PERIOD: 20
+  EVAL_PERIOD: 200000
+TEST:
+  IMS_PER_BATCH: 32
+  RE_RANKING: 'no'
+  WEIGHT: "path"
+  FEAT_NORM: 'yes'
+
+OUTPUT_DIR: "work_space_tri"
+
+
